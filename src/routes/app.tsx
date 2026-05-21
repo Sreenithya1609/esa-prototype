@@ -3,9 +3,8 @@ import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/app")({
   beforeLoad: ({ location }) => {
-    // Default landing inside the app shell
     if (location.pathname === "/app") {
-      throw redirect({ to: "/app/chat" });
+      throw redirect({ to: "/app/dashboard" });
     }
   },
   component: AppShell,

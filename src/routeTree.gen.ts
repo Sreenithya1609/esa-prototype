@@ -16,7 +16,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppTeamRouteImport } from './routes/app.team'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppDataRouteImport } from './routes/app.data'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppChatRouteImport } from './routes/app.chat'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppAuditRouteImport } from './routes/app.audit'
@@ -56,9 +58,19 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDataRoute = AppDataRouteImport.update({
   id: '/data',
   path: '/data',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppChatRoute = AppChatRouteImport.update({
@@ -85,7 +97,9 @@ export interface FileRoutesByFullPath {
   '/app/audit': typeof AppAuditRoute
   '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app/data': typeof AppDataRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/team': typeof AppTeamRoute
@@ -98,7 +112,9 @@ export interface FileRoutesByTo {
   '/app/audit': typeof AppAuditRoute
   '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app/data': typeof AppDataRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/team': typeof AppTeamRoute
@@ -112,7 +128,9 @@ export interface FileRoutesById {
   '/app/audit': typeof AppAuditRoute
   '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app/data': typeof AppDataRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/team': typeof AppTeamRoute
@@ -127,7 +145,9 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/billing'
     | '/app/chat'
+    | '/app/dashboard'
     | '/app/data'
+    | '/app/profile'
     | '/app/reports'
     | '/app/settings'
     | '/app/team'
@@ -140,7 +160,9 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/billing'
     | '/app/chat'
+    | '/app/dashboard'
     | '/app/data'
+    | '/app/profile'
     | '/app/reports'
     | '/app/settings'
     | '/app/team'
@@ -153,7 +175,9 @@ export interface FileRouteTypes {
     | '/app/audit'
     | '/app/billing'
     | '/app/chat'
+    | '/app/dashboard'
     | '/app/data'
+    | '/app/profile'
     | '/app/reports'
     | '/app/settings'
     | '/app/team'
@@ -217,11 +241,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/data': {
       id: '/app/data'
       path: '/data'
       fullPath: '/app/data'
       preLoaderRoute: typeof AppDataRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/chat': {
@@ -252,7 +290,9 @@ interface AppRouteChildren {
   AppAuditRoute: typeof AppAuditRoute
   AppBillingRoute: typeof AppBillingRoute
   AppChatRoute: typeof AppChatRoute
+  AppDashboardRoute: typeof AppDashboardRoute
   AppDataRoute: typeof AppDataRoute
+  AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTeamRoute: typeof AppTeamRoute
@@ -262,7 +302,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppAuditRoute: AppAuditRoute,
   AppBillingRoute: AppBillingRoute,
   AppChatRoute: AppChatRoute,
+  AppDashboardRoute: AppDashboardRoute,
   AppDataRoute: AppDataRoute,
+  AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTeamRoute: AppTeamRoute,
@@ -279,3 +321,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
